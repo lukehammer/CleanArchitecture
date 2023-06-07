@@ -12,6 +12,8 @@
 
 A starting point for Clean Architecture with ASP.NET Core. [Clean Architecture](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html) is just the latest in a series of names for the same loosely-coupled, dependency-inverted architecture. You will also find it named [hexagonal](http://alistair.cockburn.us/Hexagonal+architecture), [ports-and-adapters](http://www.dossier-andreas.net/software_architecture/ports_and_adapters.html), or [onion architecture](http://jeffreypalermo.com/blog/the-onion-architecture-part-1/).
 
+This architecture is used in the [DDD Fundamentals course](https://www.pluralsight.com/courses/fundamentals-domain-driven-design) by [Steve Smith](https://ardalis.com) and [Julie Lerman](https://thedatafarm.com/). Contact Steve's company, [NimblePros](https://nimblepros.com/), for Clean Architecture or DDD training and/or implementation assistance for your team.
+
 ## Table Of Contents
 
 - [Clean Architecture](#clean-architecture)
@@ -21,9 +23,10 @@ A starting point for Clean Architecture with ASP.NET Core. [Clean Architecture](
   * [Versions](#versions)
   * [Learn More](#learn-more)
 - [Getting Started](#getting-started)
-  * [Using the Visual Studio Item Template](#using-the-visual-studio-item-template)
   * [Using the dotnet CLI template](#using-the-dotnet-cli-template)
+  * [Using the Visual Studio Item Template (deprecated)](#using-the-visual-studio-item-template)
   * [Using the GitHub Repository](#using-the-github-repository)
+  * [Running Migrations](#running-migrations)
 - [Goals](#goals)
   * [History and Shameless Plug Section](#history-and-shameless-plug-section)
 - [Design Decisions and Dependencies](#design-decisions-and-dependencies)
@@ -34,7 +37,7 @@ A starting point for Clean Architecture with ASP.NET Core. [Clean Architecture](
   * [The Test Projects](#the-test-projects)
 - [Patterns Used](#patterns-used)
   * [Domain Events](#domain-events)
-  * [Related Projects](#related-projects)
+- [Related Projects](#related-projects)
 
 ## Give a Star! :star:
 If you like or are using this project to learn or start your solution, please give it a star. Thanks!
@@ -45,8 +48,9 @@ Or if you're feeling really generous, we now support GitHub sponsorships - see t
 
 ## Versions
 
-The master branch is now using .NET 6. If you need a previous version use one of these tagged commits:
+The master branch is now using .NET 7. If you need a previous version use one of these tagged commits:
 
+- [6.0](https://github.com/ardalis/CleanArchitecture/releases/tag/dotnet-6)
 - [5.0](https://github.com/ardalis/CleanArchitecture/releases/tag/dotnet-core-5)
 - [3.1](https://github.com/ardalis/CleanArchitecture/tree/dotnet-core-3.1)
 - [2.2](https://github.com/ardalis/CleanArchitecture/tree/dotnet-core-2.2)
@@ -68,24 +72,12 @@ To use this template, there are a few options:
 
 These are all covered below.
 
-## Using the Visual Studio Item Template
-
-After installing the template, you should be able to create a new project in Visual Studio and search for Clean Architecture. You should see the template appear in your list of project templates:
-
-![Clean Architecture Project Template](https://user-images.githubusercontent.com/782127/80412393-cd116880-889b-11ea-886f-9b91fffbc767.png)
-
-After choosing this template, provide a project name and finish the project creation wizard. You should be all set.
-
-![Clean Architecture Project Template step 2](https://user-images.githubusercontent.com/782127/80412455-e5818300-889b-11ea-8219-379581583a92.png)
-
-Note that the template is generally only updated with major updates to the project. The GitHub repository will always have the latest bug fixes and enhancements.
-
 ## Using the dotnet CLI template
 
 First, install the template from [NuGet (https://www.nuget.org/packages/Ardalis.CleanArchitecture.Template/)](https://www.nuget.org/packages/Ardalis.CleanArchitecture.Template/):
 
 ```powershell
-dotnet new -i Ardalis.CleanArchitecture.Template
+dotnet new install Ardalis.CleanArchitecture.Template
 ```
 
 You should see the template in the list of templates from `dotnet new` after this install successfully. Look for "Steve Smith Clean Architecture" with Short Name of "clean-arch".
@@ -107,6 +99,20 @@ Thanks [@dahlsailrunner](https://github.com/dahlsailrunner) for your help gettin
 
 > **Known Issue**: Don't include hyphens in the name. See [#201](https://github.com/ardalis/CleanArchitecture/issues/201).
 
+## Using the Visual Studio Item Template (deprecated)
+
+**This template hasn't been updated since VS2019 and an earlier version of .NET Core. It doesn't appear to work with VS2022/.NET 7**
+
+After installing the template, you should be able to create a new project in Visual Studio and search for Clean Architecture. You should see the template appear in your list of project templates:
+
+![Clean Architecture Project Template](https://user-images.githubusercontent.com/782127/80412393-cd116880-889b-11ea-886f-9b91fffbc767.png)
+
+After choosing this template, provide a project name and finish the project creation wizard. You should be all set.
+
+![Clean Architecture Project Template step 2](https://user-images.githubusercontent.com/782127/80412455-e5818300-889b-11ea-8219-379581583a92.png)
+
+Note that the template is generally only updated with major updates to the project. The GitHub repository will always have the latest bug fixes and enhancements.
+
 ## Using the GitHub Repository
 
 To get started based on this repository, you need to get a copy locally. You have three options: fork, clone, or download. Most of the time, you probably just want to download.
@@ -116,6 +122,12 @@ You should **download the repository**, unblock the zip file, and extract it to 
 You should **fork this repository** only if you plan on submitting a pull request. Or if you'd like to keep a copy of a snapshot of the repository in your own GitHub account.
 
 You should **clone this repository** if you're one of the contributors and you have commit access to it. Otherwise you probably want one of the other options.
+
+## Running Migrations
+
+In Visual Studio, open the Package Manager Console, and run `Add-Migration InitialMigrationName -StartupProject Your.ProjectName.Web -Context AppDbContext -Project Your.ProjectName.Infrastructure`.
+
+To use SqlServer, change `options.UseSqlite(connectionString));` to `options.UseSqlServer(connectionString));` in the `Your.ProjectName.Infrastructure.StartupSetup` file. Also remember to replace the `SqliteConnection` with `DefaultConnection` in the `Your.ProjectName.Web.Program` file, which points to your Database Server.
 
 # Goals
 
@@ -196,4 +208,3 @@ Domain events are a great pattern for decoupling a trigger for an operation from
 - [GuardClauses](https://github.com/ardalis/guardclauses)
 - [Result](https://github.com/ardalis/result)
 - [Specification](https://github.com/ardalis/specification)
-

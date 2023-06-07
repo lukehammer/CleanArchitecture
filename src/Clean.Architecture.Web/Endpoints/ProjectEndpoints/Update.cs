@@ -20,30 +20,33 @@ public class Update : EndpointBaseAsync
   [HttpPut(UpdateProjectRequest.Route)]
   [SwaggerOperation(
       Summary = "Updates a Project",
-      Description = "Updates a Project with a longer description",
+      Description = "Updates a Project. Only supports changing the name.",
       OperationId = "Projects.Update",
       Tags = new[] { "ProjectEndpoints" })
   ]
-  public override async Task<ActionResult<UpdateProjectResponse>> HandleAsync(UpdateProjectRequest request,
-      CancellationToken cancellationToken)
+  public override async Task<ActionResult<UpdateProjectResponse>> HandleAsync(
+    UpdateProjectRequest request,
+      CancellationToken cancellationToken = new ())
   {
     if (request.Name == null)
     {
       return BadRequest();
     }
-    var existingProject = await _repository.GetByIdAsync(request.Id); // TODO: pass cancellation token
 
+    var existingProject = await _repository.GetByIdAsync(request.Id, cancellationToken);
     if (existingProject == null)
     {
       return NotFound();
     }
+
     existingProject.UpdateName(request.Name);
 
-    await _repository.UpdateAsync(existingProject); // TODO: pass cancellation token
+    await _repository.UpdateAsync(existingProject, cancellationToken);
 
     var response = new UpdateProjectResponse(
         project: new ProjectRecord(existingProject.Id, existingProject.Name)
     );
+
     return Ok(response);
   }
 }
